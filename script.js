@@ -307,7 +307,10 @@ map.on("click", function(e) {
     reader.readAsDataURL(file);
     setMapCursor(false);
     currentType = null;
+initMap();
+    
   };
 };
+
 
 
