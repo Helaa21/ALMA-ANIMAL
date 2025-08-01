@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticias - Alma Animal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Blog de Noticias</h1>
+    <nav>
+      <a href="index.html">Inicio</a> | 
+      <a href="noticias.html">Noticias</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <article>
+        <h2>📢 Campaña de esterilización - Lima Norte</h2>
+        <p>Fecha: 20 de agosto | Lugar: Los Olivos | Costo: Gratuito para mascotas rescatadas.</p>
+      </article>
+
+      <article>
+        <h2>📰 Historia feliz: Gato rescatado encuentra hogar</h2>
+        <p>“Pelusa”, encontrada en San Borja, fue adoptada por una familia amante de los animales.</p>
+      </article>
+
+      <!-- Aquí puedes agregar más noticias en el mismo formato -->
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Alma Animal. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>
