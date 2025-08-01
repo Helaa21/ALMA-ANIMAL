@@ -32,13 +32,7 @@ const newsData = [
     ]
   },
   {
-    title: "Campaña de Esterilización Gratuita",
-    date: "25 de Julio, 2025",
-    imageUrl: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=1964&auto=format&fit=crop",
-    contentHTML: `
-      <p class="text-gray-700 leading-relaxed mb-6">¡Grandes noticias para la comunidad! Anunciamos una jornada de esterilización gratuita para perros y gatos en el distrito de Miraflores. Se llevará a cabo el próximo 15 de Septiembre.</p>
-      <p class="text-gray-700 leading-relaxed">Esta iniciativa busca controlar la población de animales callejeros y promover la salud de nuestras mascotas. ¡Los cupos son limitados! Asegura el tuyo registrándote a través de nuestras redes sociales.</p>
-    `,
+    
     sources: [] // Puedes dejar esta lista vacía si no hay fuentes
   }
 ];
@@ -162,3 +156,4 @@ document.querySelector('a[href="#"]').addEventListener('click', (e) => { e.preve
 
 // Inicializar la aplicación
 showSection('home-section');
+
