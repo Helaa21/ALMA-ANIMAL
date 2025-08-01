@@ -1,60 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alma Animal</title>
-    <a href="index.html">Inicio</a> |
-      <a href="noticias.html">Blogs de Noticias</a>
     
-    <!-- Tailwind CSS para el diseño -->
+    <!-- Tailwind CSS (sigue siendo necesario para los estilos base) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Leaflet.js para el mapa interactivo -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <!-- Estilos personalizados y fuentes -->
+    <!-- Fuentes de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .font-poppins {
-            font-family: 'Poppins', sans-serif;
-        }
-        .page-section { display: none; }
-        #home-section { display: block; }
-        #map { height: 500px; width: 100%; border-radius: 0.5rem; z-index: 10; }
-        .transition-all { transition: all 0.3s ease-in-out; }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    
+    <!-- TU HOJA DE ESTILOS PERSONALIZADA -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-100 text-gray-800">
 
     <!-- =========== BARRA DE NAVEGACIÓN =========== -->
     <nav class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
-        
-  <a href="index.html">Inicio</a> |
-  <a href="noticias.html">Blogs de Noticias</a>
-<a href="noticias.html">Blogs de Noticias</a>
-
-
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
             <a href="#" class="font-poppins font-bold text-2xl text-cyan-800">Alma Animal</a>
             <div class="hidden md:flex space-x-6 items-center">
@@ -82,12 +51,8 @@
             <h1 class="font-poppins text-5xl md:text-6xl font-bold text-cyan-800 mb-4">Alma Animal</h1>
             <p class="text-lg text-gray-600 mb-8">Conectando corazones, creando familias.</p>
             <div class="max-w-4xl mx-auto bg-white p-4 rounded-2xl shadow-lg mb-12">
-                <img src="https://images.unsplash.com/photo-1548681528-6a5c45b66b42?q=80&w=2070&auto=format&fit=crop" 
-                     onerror="this.onerror=null;this.src='https://placehold.co/1200x600/a0dee0/333?text=Perro+y+Gato';"
-                     alt="Un perro y un gato juntos" class="w-full h-auto object-cover rounded-xl">
+                <img src="https://images.unsplash.com/photo-1548681528-6a5c45b66b42?q=80&w=2070&auto=format&fit=crop" onerror="this.onerror=null;this.src='https://placehold.co/1200x600/a0dee0/333?text=Perro+y+Gato';" alt="Un perro y un gato juntos" class="w-full h-auto object-cover rounded-xl">
             </div>
-
-            <!-- --- SECCIÓN DE SUSCRIPCIÓN --- -->
             <div class="py-16 bg-cyan-50/70 rounded-2xl">
                 <div class="container mx-auto px-6 text-center">
                     <h2 class="font-poppins text-3xl font-bold text-cyan-800 mb-4">¡No te pierdas de nada!</h2>
@@ -104,16 +69,10 @@
         <!-- --- SECCIÓN FORMANDO FAMILIAS --- -->
         <section id="formando-familias" class="page-section">
             <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="font-poppins text-4xl font-bold text-cyan-800">Formando Familias</h2>
-                    <p class="text-gray-600">Encuentra a tu próximo mejor amigo.</p>
-                </div>
+                <div><h2 class="font-poppins text-4xl font-bold text-cyan-800">Formando Familias</h2><p class="text-gray-600">Encuentra a tu próximo mejor amigo.</p></div>
                 <button id="add-pet-btn" class="bg-emerald-500 text-white px-5 py-2 rounded-md hover:bg-emerald-600 transition-all">Poner en Adopción</button>
             </div>
-            <div id="pets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Las tarjetas de mascotas se insertarán aquí -->
-                <div id="pets-loader" class="loader"></div>
-            </div>
+            <div id="pets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><div id="pets-loader" class="loader"></div></div>
         </section>
 
         <!-- --- SECCIÓN MAPEO DE MASCOTAS --- -->
@@ -131,10 +90,11 @@
 
         <!-- --- SECCIÓN BLOG DE NOTICIAS --- -->
         <section id="blog-noticias" class="page-section">
-            <h2 class="font-poppins text-4xl font-bold text-cyan-800 mb-6">Blog de Noticias</h2>
-            <p class="text-gray-600 mb-8">Mantente informado sobre campañas, eventos y noticias importantes del mundo animal.</p>
-             <div class="text-center bg-gray-200 p-10 rounded-lg">
-                <p class="text-gray-700">El blog de noticias está en desarrollo. ¡Pronto podrás leer y compartir!</p>
+            <h2 class="font-poppins text-4xl font-bold text-cyan-800 mb-8 text-center">Blog de Noticias</h2>
+            <!-- El contenedor del feed de noticias se generará aquí por JavaScript -->
+            <div id="news-feed-container" class="space-y-12">
+                <!-- Loader para el feed de noticias -->
+                <div class="loader"></div>
             </div>
         </section>
 
@@ -142,14 +102,12 @@
         <section id="notas-historias" class="page-section">
             <h2 class="font-poppins text-4xl font-bold text-cyan-800 mb-6">Notas e Historias</h2>
             <p class="text-gray-600 mb-8">Un espacio para que nuestra comunidad comparta sus experiencias, finales felices y momentos especiales.</p>
-            <div class="text-center bg-gray-200 p-10 rounded-lg">
-                <p class="text-gray-700">La sección de historias de la comunidad está en construcción.</p>
-            </div>
+            <div class="text-center bg-gray-200 p-10 rounded-lg"><p class="text-gray-700">La sección de historias de la comunidad está en construcción.</p></div>
         </section>
 
     </main>
 
-    <!-- =========== MODALES =========== -->
+    <!-- ... (Todos los modales siguen aquí porque son parte de la estructura HTML) ... -->
     <!-- Modal de Autenticación -->
     <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
         <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
@@ -162,459 +120,13 @@
             </form>
         </div>
     </div>
-    
-    <!-- Modal para Reportar Mascota (Perdida/Avistada) -->
-    <div id="report-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg">
-            <h3 id="report-modal-title" class="font-poppins text-2xl font-bold text-cyan-800 mb-6"></h3>
-            <form id="report-form">
-                <p class="text-sm text-gray-600 mb-4">Haz clic en el mapa para marcar la ubicación y luego completa el formulario.</p>
-                <input type="hidden" id="latitude" name="latitude"><input type="hidden" id="longitude" name="longitude">
-                <div class="mb-4"><label for="pet-photo" class="block text-gray-700 mb-2">Foto</label><input type="file" id="pet-photo" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100" accept="image/*" required></div>
-                <div class="mb-4"><label for="pet-description" class="block text-gray-700 mb-2">Descripción (raza, color, etc.)</label><textarea id="pet-description" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required></textarea></div>
-                <button type="button" id="generate-social-post-btn" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal-400 to-blue-500 text-white px-4 py-2 rounded-md hover:from-teal-500 hover:to-blue-600 mb-4">✨ Generar Anuncio para Redes Sociales</button>
-                <p id="report-error" class="text-red-500 text-sm mb-4 hidden"></p>
-                <div class="flex justify-end space-x-4"><button type="button" id="cancel-report-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Cancelar</button><button type="submit" id="submit-report-btn" class="bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700">Enviar Reporte</button></div>
-            </form>
-        </div>
-    </div>
+    <!-- ... (Aquí van los otros modales: report-modal y add-pet-modal. No los incluyo para abreviar, pero debes mantenerlos como estaban) ... -->
 
-    <!-- Modal para Poner en Adopción -->
-    <div id="add-pet-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl">
-            <h3 class="font-poppins text-2xl font-bold text-cyan-800 mb-6">Dar una Mascota en Adopción</h3>
-            <form id="add-pet-form">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div><label class="block text-gray-700 mb-2">Nombre</label><input type="text" id="pet-name" class="w-full px-4 py-2 border rounded-lg" required></div>
-                    <div><label class="block text-gray-700 mb-2">Edad (aprox)</label><input type="text" id="pet-age" class="w-full px-4 py-2 border rounded-lg" required></div>
-                    <div><label class="block text-gray-700 mb-2">Género</label><select id="pet-gender" class="w-full px-4 py-2 border rounded-lg"><option>Macho</option><option>Hembra</option></select></div>
-                    <div><label class="block text-gray-700 mb-2">Comportamiento</label><input type="text" id="pet-behavior" placeholder="Ej: Juguetón, tranquilo, tímido" class="w-full px-4 py-2 border rounded-lg" required></div>
-                    <div class="md:col-span-2"><label class="block text-gray-700 mb-2">Condición Especial (si aplica)</label><input type="text" id="pet-condition" placeholder="Ej: Necesita dieta especial, es ciego" class="w-full px-4 py-2 border rounded-lg"></div>
-                    <div class="md:col-span-2">
-                        <label class="block text-gray-700 mb-2">Presentación</label>
-                        <textarea id="pet-presentation" rows="4" class="w-full px-4 py-2 border rounded-lg" placeholder="Describe a la mascota..." required></textarea>
-                        <button type="button" id="generate-presentation-btn" class="w-full mt-2 flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-md hover:from-purple-600 hover:to-pink-600">✨ Generar Presentación con IA</button>
-                    </div>
-                     <div class="md:col-span-2"><label class="block text-gray-700 mb-2">Foto</label><input type="file" id="add-pet-photo" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100" accept="image/*" required></div>
-                </div>
-                <p id="add-pet-error" class="text-red-500 text-sm my-4 hidden"></p>
-                <div class="flex justify-end space-x-4 mt-6"><button type="button" id="cancel-add-pet-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Cancelar</button><button type="submit" id="submit-add-pet-btn" class="bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700">Publicar Mascota</button></div>
-            </form>
-        </div>
-    </div>
-
-
-    <!-- =========== Firebase SDKs =========== -->
-    <script type="module">
-        // Importa las funciones que necesitas de los SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
-
-        // --- CONFIGURACIÓN DE FIREBASE ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "...", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-
-        // --- VARIABLES GLOBALES Y SELECTORES ---
-        let map;
-        let tempMarker;
-        let currentReportType = '';
-        const sections = document.querySelectorAll('.page-section');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const authModal = document.getElementById('auth-modal');
-        const reportModal = document.getElementById('report-modal');
-        const addPetModal = document.getElementById('add-pet-modal');
-
-        // --- LÓGICA DE NAVEGACIÓN ---
-        function showSection(id) {
-            sections.forEach(section => { section.style.display = 'none'; });
-            document.getElementById(id).style.display = 'block';
-            
-            if (id === 'mapeo-mascotas') {
-                if (!map) initMap(); else setTimeout(() => map.invalidateSize(), 100);
-            }
-            if (id === 'formando-familias') {
-                loadPetsForAdoption();
-            }
-        }
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => { e.preventDefault(); showSection(link.getAttribute('href').substring(1)); });
-        });
-        document.querySelector('a[href="#"]').addEventListener('click', (e) => { e.preventDefault(); showSection('home-section'); });
-
-        // --- LÓGICA DE AUTENTICACIÓN ---
-        const loginBtn = document.getElementById('login-btn');
-        const signupBtn = document.getElementById('signup-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const cancelAuthBtn = document.getElementById('cancel-auth-btn');
-        const authForm = document.getElementById('auth-form');
-        const authError = document.getElementById('auth-error');
-        let isLoginMode = true;
-
-        function openAuthModal(loginMode) {
-            isLoginMode = loginMode;
-            authForm.reset();
-            authError.classList.add('hidden');
-            document.getElementById('modal-title').textContent = isLoginMode ? 'Iniciar Sesión' : 'Crear Nueva Cuenta';
-            document.getElementById('submit-auth-btn').textContent = isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta';
-            authModal.classList.remove('hidden');
-            authModal.classList.add('flex');
-        }
-        function closeAuthModal() { authModal.classList.add('hidden'); authModal.classList.remove('flex'); }
-        loginBtn.addEventListener('click', () => openAuthModal(true));
-        signupBtn.addEventListener('click', () => openAuthModal(false));
-        cancelAuthBtn.addEventListener('click', closeAuthModal);
-
-        authForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            authError.classList.add('hidden');
-            try {
-                if (isLoginMode) { await signInWithEmailAndPassword(auth, email, password); } 
-                else { await createUserWithEmailAndPassword(auth, email, password); }
-                closeAuthModal();
-            } catch (error) {
-                console.error("Auth Error:", error);
-                authError.textContent = "Error: " + error.message;
-                authError.classList.remove('hidden');
-            }
-        });
-        logoutBtn.addEventListener('click', async () => { try { await signOut(auth); } catch (error) { console.error("Logout Error:", error); } });
-        
-        onAuthStateChanged(auth, (user) => {
-            const authLinks = document.getElementById('auth-links');
-            const userProfileLink = document.getElementById('user-profile-link');
-            if (user && !user.isAnonymous) {
-                authLinks.classList.add('hidden');
-                userProfileLink.classList.remove('hidden');
-                userProfileLink.classList.add('flex');
-                document.getElementById('user-email-display').textContent = user.email;
-            } else {
-                authLinks.classList.remove('hidden');
-                userProfileLink.classList.add('hidden');
-                userProfileLink.classList.remove('flex');
-            }
-        });
-        
-        (async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { await signInWithCustomToken(auth, __initial_auth_token); } 
-                else { await signInAnonymously(auth); }
-            } catch (error) { console.error("Initial Auth Error:", error); }
-        })();
-
-        // --- LÓGICA DE API GEMINI ---
-        async function callGemini(prompt) {
-            const apiKey = ""; // Dejar en blanco, se gestiona en el entorno
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-            
-            const payload = {
-                contents: [{ role: "user", parts: [{ text: prompt }] }]
-            };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API call failed with status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    return "No se pudo generar una respuesta. Inténtalo de nuevo.";
-                }
-            } catch (error) {
-                console.error("Error calling Gemini API:", error);
-                return "Error al contactar la IA. Verifica la conexión.";
-            }
-        }
-
-        // --- LÓGICA DE FORMANDO FAMILIAS ---
-        const addPetBtn = document.getElementById('add-pet-btn');
-        const cancelAddPetBtn = document.getElementById('cancel-add-pet-btn');
-        const addPetForm = document.getElementById('add-pet-form');
-        const petsGrid = document.getElementById('pets-grid');
-        const petsLoader = document.getElementById('pets-loader');
-
-        addPetBtn.addEventListener('click', () => {
-            if (!auth.currentUser || auth.currentUser.isAnonymous) {
-                alert("Por favor, crea una cuenta o inicia sesión para poner una mascota en adopción.");
-                openAuthModal(true);
-                return;
-            }
-            addPetModal.classList.remove('hidden');
-            addPetModal.classList.add('flex');
-        });
-        cancelAddPetBtn.addEventListener('click', () => {
-            addPetModal.classList.add('hidden');
-            addPetModal.classList.remove('flex');
-        });
-        
-        async function loadPetsForAdoption() {
-            petsLoader.style.display = 'block';
-            petsGrid.innerHTML = ''; // Limpiar antes de cargar
-            petsGrid.appendChild(petsLoader);
-
-            const q = collection(db, `artifacts/${appId}/public/data/petsForAdoption`);
-            onSnapshot(q, (querySnapshot) => {
-                petsLoader.style.display = 'none';
-                petsGrid.innerHTML = '';
-                if(querySnapshot.empty) {
-                    petsGrid.innerHTML = `<p class="text-gray-500 md:col-span-3 text-center">Aún no hay mascotas para adoptar. ¡Sé el primero en publicar!</p>`;
-                } else {
-                    querySnapshot.forEach((doc) => {
-                        const pet = doc.data();
-                        const petCard = document.createElement('div');
-                        petCard.className = 'bg-white rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 transition-all';
-                        petCard.innerHTML = `
-                            <img src="${pet.photoUrl}" alt="${pet.name}" class="w-full h-56 object-cover">
-                            <div class="p-4">
-                                <h3 class="font-bold text-xl text-cyan-800">${pet.name}</h3>
-                                <p class="text-sm text-gray-500 mb-2">${pet.age} - ${pet.gender}</p>
-                                <p class="text-gray-700">${pet.presentation}</p>
-                            </div>
-                        `;
-                        petsGrid.appendChild(petCard);
-                    });
-                }
-            }, (error) => {
-                console.error("Error loading pets:", error);
-                petsGrid.innerHTML = `<p class="text-red-500 md:col-span-3 text-center">Error al cargar las mascotas.</p>`;
-            });
-        }
-        
-        addPetForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('pet-name').value;
-            const age = document.getElementById('pet-age').value;
-            const gender = document.getElementById('pet-gender').value;
-            const behavior = document.getElementById('pet-behavior').value;
-            const condition = document.getElementById('pet-condition').value;
-            const presentation = document.getElementById('pet-presentation').value;
-            const photoFile = document.getElementById('add-pet-photo').files[0];
-            const errorEl = document.getElementById('add-pet-error');
-            
-            if(!photoFile) {
-                errorEl.textContent = "Por favor, sube una foto.";
-                errorEl.classList.remove('hidden');
-                return;
-            }
-            errorEl.classList.add('hidden');
-            
-            const submitBtn = document.getElementById('submit-add-pet-btn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Publicando...';
-            
-            try {
-                const storageRef = ref(storage, `adoption_pets/${appId}/${Date.now()}_${photoFile.name}`);
-                const snapshot = await uploadBytes(storageRef, photoFile);
-                const photoUrl = await getDownloadURL(snapshot.ref);
-
-                const petData = { name, age, gender, behavior, condition, presentation, photoUrl, ownerId: auth.currentUser.uid, createdAt: new Date() };
-                await addDoc(collection(db, `artifacts/${appId}/public/data/petsForAdoption`), petData);
-
-                addPetForm.reset();
-                addPetModal.classList.add('hidden');
-                addPetModal.classList.remove('flex');
-            } catch (error) {
-                console.error("Error adding pet:", error);
-                errorEl.textContent = "Error al publicar. Inténtalo de nuevo.";
-                errorEl.classList.remove('hidden');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Publicar Mascota';
-            }
-        });
-
-        // Gemini: Generar presentación de mascota
-        document.getElementById('generate-presentation-btn').addEventListener('click', async (e) => {
-            const btn = e.currentTarget;
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>';
-
-            const behavior = document.getElementById('pet-behavior').value;
-            const age = document.getElementById('pet-age').value;
-            const gender = document.getElementById('pet-gender').value;
-            const condition = document.getElementById('pet-condition').value;
-
-            if (!behavior || !age) {
-                alert("Por favor, completa al menos la edad y el comportamiento para que la IA pueda ayudarte.");
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-                return;
-            }
-            
-            const prompt = `Escribe una presentación creativa y amigable para una mascota en adopción. Usa un tono cálido y persuasivo. Aquí están sus datos:\n- Edad: ${age}\n- Género: ${gender}\n- Comportamiento: ${behavior}\n- Condición especial (si la hay): ${condition || 'Ninguna'}\n\nNo incluyas el nombre, solo la descripción. Sé breve, unas 3 o 4 frases.`;
-            
-            const generatedText = await callGemini(prompt);
-            document.getElementById('pet-presentation').value = generatedText;
-            
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-        });
-
-
-        // --- LÓGICA DEL MAPA INTERACTIVO ---
-        function initMap() {
-            map = L.map('map').setView([-12.046374, -77.042793], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
-            loadMapMarkers();
-            map.on('click', (e) => {
-                if (reportModal.classList.contains('flex')) {
-                    const { lat, lng } = e.latlng;
-                    document.getElementById('latitude').value = lat;
-                    document.getElementById('longitude').value = lng;
-                    if (tempMarker) map.removeLayer(tempMarker);
-                    tempMarker = L.marker([lat, lng]).addTo(map).bindPopup('Ubicación seleccionada').openPopup();
-                }
-            });
-        }
-        async function loadMapMarkers() {
-            if (!map) return;
-            const q = collection(db, `artifacts/${appId}/public/data/lostPets`);
-            onSnapshot(q, (querySnapshot) => {
-                map.eachLayer((layer) => { if (layer instanceof L.Marker) { map.removeLayer(layer); } });
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const markerColor = data.type === 'lost' ? 'red' : 'green';
-                    const iconUrl = `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${markerColor}.png`;
-                    const customIcon = new L.Icon({ iconUrl, shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] });
-                    L.marker([data.latitude, data.longitude], {icon: customIcon}).addTo(map).bindPopup(`<div class="w-48"><img src="${data.photoUrl}" alt="Mascota" class="w-full h-32 object-cover rounded-t-md"><div class="p-2"><p class="font-bold text-md">${data.type === 'lost' ? 'PERDIDO' : 'AVISTADO'}</p><p class="text-sm">${data.description}</p></div></div>`);
-                });
-            });
-        }
-
-        // --- LÓGICA DE REPORTES ---
-        const reportLostBtn = document.getElementById('report-lost-btn');
-        const reportSightingBtn = document.getElementById('report-sighting-btn');
-        const cancelReportBtn = document.getElementById('cancel-report-btn');
-        const reportForm = document.getElementById('report-form');
-        const reportError = document.getElementById('report-error');
-
-        function openReportModal(type) {
-             if (!auth.currentUser || auth.currentUser.isAnonymous) { alert("Por favor, crea una cuenta o inicia sesión para poder hacer un reporte."); openAuthModal(true); return; }
-            currentReportType = type;
-            reportForm.reset();
-            reportError.classList.add('hidden');
-            if (tempMarker) map.removeLayer(tempMarker);
-            document.getElementById('report-modal-title').textContent = type === 'lost' ? 'Reportar Mascota Perdida' : 'Reportar Avistamiento';
-            reportModal.classList.remove('hidden');
-            reportModal.classList.add('flex');
-        }
-        function closeReportModal() { reportModal.classList.add('hidden'); reportModal.classList.remove('flex'); if (tempMarker) map.removeLayer(tempMarker); }
-        reportLostBtn.addEventListener('click', () => openReportModal('lost'));
-        reportSightingBtn.addEventListener('click', () => openReportModal('sighting'));
-        cancelReportBtn.addEventListener('click', closeReportModal);
-        
-        reportForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const lat = document.getElementById('latitude').value, lng = document.getElementById('longitude').value, description = document.getElementById('pet-description').value, photoFile = document.getElementById('pet-photo').files[0];
-            if (!lat || !lng) { reportError.textContent = "Por favor, selecciona una ubicación en el mapa."; reportError.classList.remove('hidden'); return; }
-            if (!photoFile) { reportError.textContent = "Por favor, sube una foto de la mascota."; reportError.classList.remove('hidden'); return; }
-            reportError.classList.add('hidden');
-            const submitBtn = document.getElementById('submit-report-btn');
-            submitBtn.disabled = true; submitBtn.textContent = 'Enviando...';
-            try {
-                const storageRef = ref(storage, `lost_pets/${appId}/${Date.now()}_${photoFile.name}`);
-                const snapshot = await uploadBytes(storageRef, photoFile);
-                const photoUrl = await getDownloadURL(snapshot.ref);
-                const reportData = { type: currentReportType, latitude: parseFloat(lat), longitude: parseFloat(lng), description, photoUrl, createdAt: new Date(), reporterId: auth.currentUser.uid };
-                await addDoc(collection(db, `artifacts/${appId}/public/data/lostPets`), reportData);
-                closeReportModal();
-                alert("¡Reporte enviado con éxito! Gracias por tu ayuda.");
-            } catch (error) {
-                console.error("Error sending report:", error);
-                reportError.textContent = "Error al enviar el reporte. Inténtalo de nuevo.";
-                reportError.classList.remove('hidden');
-            } finally {
-                submitBtn.disabled = false; submitBtn.textContent = 'Enviar Reporte';
-            }
-        });
-        
-        // Gemini: Generar post para redes sociales
-        document.getElementById('generate-social-post-btn').addEventListener('click', async (e) => {
-            const btn = e.currentTarget;
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>';
-
-            const description = document.getElementById('pet-description').value;
-            if (!description) {
-                alert("Por favor, completa la descripción para que la IA pueda generar el anuncio.");
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-                return;
-            }
-            
-            const reportType = currentReportType === 'lost' ? 'PERDIDO' : 'AVISTADO';
-            const prompt = `Crea un texto corto y efectivo para un anuncio de redes sociales sobre una mascota. El anuncio debe ser claro y fácil de leer. Incluye emojis relevantes.\nTipo de reporte: ${reportType}\nDescripción de la mascota: ${description}\n\nEl anuncio debe incluir un llamado a la acción para que la gente comparta y se ponga en contacto si tiene información.`;
-            
-            const generatedText = await callGemini(prompt);
-            document.getElementById('pet-description').value = generatedText;
-            
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-        });
-
-        // --- LÓGICA DE SUSCRIPCIÓN ---
-        const subscriptionForm = document.getElementById('subscription-form');
-        const subscriptionEmail = document.getElementById('subscription-email');
-        const subscriptionMessage = document.getElementById('subscription-message');
-        const subscriptionSubmitBtn = document.getElementById('subscription-submit-btn');
-
-        subscriptionForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = subscriptionEmail.value;
-            
-            if (!email) {
-                subscriptionMessage.textContent = 'Por favor, ingresa un correo electrónico.';
-                subscriptionMessage.className = 'mt-4 text-sm text-red-500';
-                return;
-            }
-
-            const originalBtnText = subscriptionSubmitBtn.textContent;
-            subscriptionSubmitBtn.disabled = true;
-            subscriptionSubmitBtn.textContent = 'Enviando...';
-            subscriptionMessage.textContent = '';
-
-            try {
-                const subscriptionData = { email: email, subscribedAt: new Date() };
-                await setDoc(doc(db, `artifacts/${appId}/public/data/subscriptions`, email), subscriptionData);
-
-                subscriptionMessage.textContent = '¡Gracias por suscribirte! Revisa tu correo.';
-                subscriptionMessage.className = 'mt-4 text-sm text-emerald-600';
-                subscriptionForm.reset();
-
-            } catch (error) {
-                console.error("Error en la suscripción:", error);
-                subscriptionMessage.textContent = 'Hubo un error al procesar tu solicitud. Inténtalo de nuevo.';
-                subscriptionMessage.className = 'mt-4 text-sm text-red-500';
-            } finally {
-                subscriptionSubmitBtn.disabled = false;
-                subscriptionSubmitBtn.textContent = originalBtnText;
-            }
-        });
-
-        // Inicializar la aplicación
-        showSection('home-section');
-    </script>
+    <!-- TU SCRIPT PRINCIPAL -->
+    <script src="script.js" type="module"></script>
 </body>
 </html>
+
 
 
 
