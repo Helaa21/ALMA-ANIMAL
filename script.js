@@ -233,5 +233,81 @@ document.querySelector('a[href="#"]').addEventListener('click', (e) => { e.preve
 // Inicializar la aplicación
 showSection('home-section');
 
+// ================ MAPEO DE MASCOTAS ================
+let mapInitialized = false;
+let map, currentType = null;
+
+const lostBtn = document.getElementById("report-lost-btn");
+const sightingBtn = document.getElementById("report-sighting-btn");
+
+function initMap() {
+  if (mapInitialized) return;
+  map = L.map("map").setView([-12.0464, -77.0428], 12); // Centro Lima
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  mapInitialized = true;
+}
+initMap();
+
+// Control de contexto
+lostBtn.onclick = () => { currentType = "lost"; setMapCursor(true); };
+sightingBtn.onclick = () => { currentType = "sighting"; setMapCursor(true); };
+
+function setMapCursor(active) {
+  const cursor = active ? "crosshair" : "";
+  document.getElementById("map").style.cursor = cursor;
+}
+
+// Al hacer click en el mapa
+map.on("click", function(e) {
+  if (!currentType) return;
+
+  // Formulario flotante
+  const popupContent = document.createElement("div");
+  popupContent.innerHTML = `
+    <form id="popup-form" style="min-width:200px">
+      <label class="block mb-1 text-sm">Foto:</label>
+      <input type="file" accept="image/*" id="popup-photo" class="mb-2" required>
+      <label class="block mb-1 text-sm">Descripción:</label>
+      <textarea id="popup-desc" class="w-full border rounded mb-2" rows="2" required></textarea>
+      <button type="submit" class="bg-cyan-600 text-white px-3 py-1 rounded text-sm">Guardar</button>
+    </form>
+    <div id="popup-preview" class="mt-2"></div>
+  `;
+
+  const markerIcon = currentType === "lost"
+      ? L.icon({ iconUrl: "https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-red.png", iconSize:[25,41], iconAnchor:[12,41] })
+      : L.icon({ iconUrl: "https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-yellow.png", iconSize:[25,41], iconAnchor:[12,41] });
+
+  const marker = L.marker(e.latlng, { icon: markerIcon }).addTo(map);
+  marker.bindPopup(popupContent).openPopup();
+
+  // Manejador del formulario
+  popupContent.querySelector("#popup-form").onsubmit = function(ev) {
+    ev.preventDefault();
+    const fileInput = popupContent.querySelector("#popup-photo");
+    const desc = popupContent.querySelector("#popup-desc").value;
+    const file = fileInput.files[0];
+
+    if (!file) { alert("Debes subir una foto."); return; }
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const imgHTML = `<img src="${evt.target.result}" alt="foto" class="w-full h-32 object-cover rounded mb-2">`;
+      marker.setPopupContent(`
+        ${imgHTML}
+        <div class="mb-1 font-semibold">${currentType === "lost" ? "Mascota Perdida" : "Avistamiento"}</div>
+        <div class="mb-2 text-sm">${desc}</div>
+      `);
+      marker.openPopup();
+    };
+    reader.readAsDataURL(file);
+    setMapCursor(false);
+    currentType = null;
+  };
+};
 
 
