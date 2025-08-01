@@ -32,8 +32,6 @@ const newsData = [
     ]
   },
   {
-    
-    sources: [] // Puedes dejar esta lista vacía si no hay fuentes
   }
 ];
 
@@ -156,4 +154,5 @@ document.querySelector('a[href="#"]').addEventListener('click', (e) => { e.preve
 
 // Inicializar la aplicación
 showSection('home-section');
+
 
