@@ -1,137 +1,323 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alma Animal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alma Animal</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Leaflet para el mapa -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet.js para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
-  <!-- CSS personalizado -->
-  <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .page-section { display: none; }
+        #home-section { display: block; }
+        #map { height: 600px; width: 100%; border-radius: 0.5rem; z-index: 10; cursor: default; }
+        .transition-all { transition: all 0.3s ease-in-out; }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0891b2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Estilos para el popup del mapa */
+        .leaflet-popup-content-wrapper { border-radius: 8px; }
+        .leaflet-popup-content { margin: 15px; font-size: 14px; }
+    </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-  <!-- Navbar -->
-  <nav class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
-    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-      <a href="#" class="font-poppins font-bold text-2xl text-cyan-800">Alma Animal</a>
-      <div class="hidden md:flex space-x-6 items-center">
-        <a href="#formando-familias" class="nav-link text-gray-600 hover:text-cyan-600">Formando Familias</a>
-        <a href="#mapeo-mascotas" class="nav-link text-gray-600 hover:text-cyan-600">Mapeo de Mascotas</a>
-        <a href="#blog-noticias" class="nav-link text-gray-600 hover:text-cyan-600">Blog de Noticias</a>
-        <a href="#notas-historias" class="nav-link text-gray-600 hover:text-cyan-600">Notas y Historias</a>
-      </div>
-      <div id="auth-links" class="space-x-2">
-        <button id="login-btn" class="bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700 transition-all">Iniciar Sesión</button>
-        <button id="signup-btn" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600 transition-all">Crear Cuenta</button>
-      </div>
-      <div id="user-profile-link" class="hidden items-center space-x-3">
-        <span id="user-email-display" class="text-sm font-medium text-gray-700"></span>
-        <button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-all">Salir</button>
-      </div>
+    <!-- =========== BARRA DE NAVEGACIÓN =========== -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center py-3">
+                <a href="#" class="font-poppins font-bold text-2xl text-cyan-800">Alma Animal</a>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#formando-familias" class="nav-link text-gray-600 hover:text-cyan-700 font-medium">Formando Familias</a>
+                    <a href="#mapeo-mascotas" class="nav-link text-gray-600 hover:text-cyan-700 font-medium">Mapeo de Mascotas</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-2" id="desktop-auth">
+                    <button id="login-btn" class="bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700">Iniciar Sesión</button>
+                    <button id="signup-btn" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600">Crear Cuenta</button>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-800 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <a href="#formando-familias" class="nav-link block py-2 px-4 text-sm hover:bg-cyan-50 rounded">Formando Familias</a>
+                <a href="#mapeo-mascotas" class="nav-link block py-2 px-4 text-sm hover:bg-cyan-50 rounded">Mapeo de Mascotas</a>
+                <hr class="my-2">
+                <div class="px-4">
+                    <button id="login-btn-mobile" class="w-full mb-2 bg-cyan-600 text-white px-4 py-2 rounded-md">Iniciar Sesión</button>
+                    <button id="signup-btn-mobile" class="w-full bg-emerald-500 text-white px-4 py-2 rounded-md">Crear Cuenta</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- =========== CONTENIDO PRINCIPAL =========== -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- --- SECCIÓN DE INICIO --- -->
+        <section id="home-section" class="page-section text-center">
+            <h1 class="font-poppins text-5xl md:text-6xl font-bold text-cyan-800 mb-4">Bienvenido a Alma Animal</h1>
+            <p class="text-lg text-gray-600 mb-8">Un espacio para conectar, ayudar y crear familias.</p>
+            <div class="max-w-4xl mx-auto bg-white p-4 rounded-2xl shadow-lg mb-12">
+                <img src="https://images.unsplash.com/photo-1548681528-6a5c45b66b42?q=80&w=2070&auto=format&fit=crop" onerror="this.onerror=null;this.src='https://placehold.co/1200x600/a0dee0/333?text=Perro+y+Gato';" alt="Un perro y un gato juntos" class="w-full h-auto object-cover rounded-xl">
+            </div>
+            <div class="py-16 bg-cyan-50/70 rounded-2xl">
+                <div class="container mx-auto px-6 text-center">
+                    <h2 class="font-poppins text-3xl font-bold text-cyan-800 mb-4">¡Únete a nuestra comunidad!</h2>
+                    <p class="text-gray-600 mb-8 max-w-2xl mx-auto">Suscríbete para recibir noticias, alertas y ser parte de nuestra red de ayuda.</p>
+                    <form id="subscription-form" class="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
+                        <input type="email" id="subscription-email" placeholder="Tu correo electrónico" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 flex-grow" required>
+                        <button type="submit" class="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 font-semibold">Suscribirme</button>
+                    </form>
+                    <p id="subscription-message" class="mt-4 text-sm h-5"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- --- SECCIÓN FORMANDO FAMILIAS --- -->
+        <section id="formando-familias" class="page-section">
+            <div class="text-center mb-12">
+                <h2 class="font-poppins text-4xl font-bold text-cyan-800">Uniendo Corazones</h2>
+                <p class="text-gray-600 mt-2">Desliza, conecta y encuentra a tu compañero ideal.</p>
+            </div>
+            <!-- Aquí iría la interfaz de perfiles tipo Tinder -->
+            <div id="pets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Tarjeta de ejemplo de mascota -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?q=80&w=1780&auto=format&fit=crop" class="w-full h-64 object-cover" alt="Gato en adopción">
+                    <div class="p-4">
+                        <h3 class="font-bold text-xl text-cyan-800">Milo</h3>
+                        <p class="text-sm text-gray-500 mb-2">Gato, 2 años</p>
+                        <p class="text-gray-700 text-sm mb-4">Un gato juguetón y cariñoso que busca un hogar tranquilo. Le encantan las siestas al sol.</p>
+                        <button class="w-full bg-yellow-400 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-yellow-500 transition-all">Me Interesa</button>
+                    </div>
+                </div>
+                <!-- Más tarjetas se cargarían aquí dinámicamente -->
+            </div>
+        </section>
+
+        <!-- --- SECCIÓN MAPEO DE MASCOTAS --- -->
+        <section id="mapeo-mascotas" class="page-section">
+            <div class="text-center mb-12">
+                <h2 class="font-poppins text-4xl font-bold text-cyan-800">Mapa de Ayuda Animal</h2>
+                <p class="text-gray-600 mt-2">Reporta y visualiza casos en tiempo real en Lima.</p>
+            </div>
+            <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+                <p class="text-center text-gray-600 mb-4">Haz clic en el mapa para crear un reporte. Elige una de las tres opciones.</p>
+                <div id="map"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =========== MODALES =========== -->
+    <!-- Modal para elegir tipo de reporte en el mapa -->
+    <div id="report-type-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-sm text-center">
+            <h3 class="font-poppins text-2xl font-bold text-cyan-800 mb-6">¿Qué deseas reportar?</h3>
+            <div class="space-y-4">
+                <button data-report-type="lost" class="report-option-btn w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600">Mascota Perdida</button>
+                <button data-report-type="sighting" class="report-option-btn w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600">Avistamiento</button>
+                <button data-report-type="abuse" class="report-option-btn w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700">Caso de Maltrato</button>
+            </div>
+            <button id="cancel-report-type-btn" class="mt-6 text-gray-500 hover:text-gray-700">Cancelar</button>
+        </div>
     </div>
-  </nav>
-
-  <!-- Contenido principal -->
-  <main class="container mx-auto px-6 py-8">
-    <!-- HOME -->
-    <section id="home-section" class="page-section text-center">
-      <h1 class="font-poppins text-5xl md:text-6xl font-bold text-cyan-800 mb-4">Alma Animal</h1>
-      <p class="text-lg text-gray-600 mb-8">Conectando corazones, creando familias.</p>
-      <div class="max-w-4xl mx-auto bg-white p-4 rounded-2xl shadow-lg mb-12">
-        <img src="https://images.unsplash.com/photo-1548681528-6a5c45b66b42?q=80&w=2070&auto=format&fit=crop" onerror="this.onerror=null;this.src='https://placehold.co/1200x600/a0dee0/333?text=Perro+y+Gato';" alt="Un perro y un gato juntos" class="w-full h-auto object-cover rounded-xl">
-      </div>
-      <div class="py-16 bg-cyan-50/70 rounded-2xl">
-        <div class="container mx-auto px-6 text-center">
-          <h2 class="font-poppins text-3xl font-bold text-cyan-800 mb-4">¡No te pierdas de nada!</h2>
-          <p class="text-gray-600 mb-8 max-w-2xl mx-auto">Suscríbete a nuestro boletín para recibir las últimas noticias, historias de éxito y alertas de mascotas directamente en tu correo.</p>
-          <form id="subscription-form" class="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
-            <input type="email" id="subscription-email" placeholder="Tu correo electrónico" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 flex-grow" required>
-            <button type="submit" id="subscription-submit-btn" class="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition-all font-semibold">Suscribirme</button>
-          </form>
-          <p id="subscription-message" class="mt-4 text-sm h-5"></p>
+    
+    <!-- Modal para rellenar información del reporte -->
+    <div id="report-info-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg">
+            <h3 id="report-info-title" class="font-poppins text-2xl font-bold mb-6"></h3>
+            <form id="report-info-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Descripción</label>
+                    <textarea id="report-description" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Foto / Video</label>
+                    <input type="file" id="report-file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100" accept="image/*,video/*" required>
+                </div>
+                <div id="contact-field-container" class="mb-4 hidden">
+                     <label class="block text-gray-700 mb-2">Información de Contacto (Opcional)</label>
+                    <input type="text" id="report-contact" placeholder="Tu teléfono o red social" class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-report-info-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Cancelar</button>
+                    <button type="submit" id="submit-report-btn" class="text-white px-4 py-2 rounded-md">Crear Reporte</button>
+                </div>
+            </form>
         </div>
-      </div>
-    </section>
-
-    <!-- FORMAR FAMILIAS -->
-    <section id="formando-familias" class="page-section">
-      <div class="flex justify-between items-center mb-8">
-        <div>
-          <h2 class="font-poppins text-4xl font-bold text-cyan-800">Formando Familias</h2>
-          <p class="text-gray-600">Encuentra a tu próximo mejor amigo.</p>
-        </div>
-        <button id="add-pet-btn" class="bg-emerald-500 text-white px-5 py-2 rounded-md hover:bg-emerald-600 transition-all">Poner en Adopción</button>
-      </div>
-      <div id="pets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><div id="pets-loader" class="loader"></div></div>
-    </section>
-
-    <!-- MAPA -->
-    <section id="mapeo-mascotas" class="page-section">
-      <h2 class="font-poppins text-4xl font-bold text-cyan-800 mb-6">Mapeo de Mascotas Perdidas</h2>
-      <p class="text-gray-600 mb-8">Reporta una mascota perdida o un avistamiento para ayudar a reunir familias. El mapa se centra en Lima, Perú.</p>
-      <div class="bg-white p-4 rounded-lg shadow-md">
-        <div class="flex justify-end space-x-2 mb-4">
-          <button id="report-lost-btn" class="bg-red-500 text-white px-5 py-2 rounded-md hover:bg-red-600 transition-all">Reportar Mascota Perdida</button>
-          <button id="report-sighting-btn" class="bg-emerald-500 text-white px-5 py-2 rounded-md hover:bg-emerald-600 transition-all">Reportar Avistamiento</button>
-        </div>
-        <div id="map" class="w-full h-96 rounded-lg"></div>
-      </div>
-    </section>
-
-    <!-- BLOG -->
-    <section id="blog-noticias" class="page-section">
-      <h2 class="font-poppins text-4xl font-bold text-cyan-800 mb-8 text-center">Blog de Noticias</h2>
-      <div id="news-feed-container" class="space-y-12">
-        <div class="loader"></div>
-      </div>
-    </section>
-
-    <!-- HISTORIAS -->
-    <section id="notas-historias" class="page-section">
-      <h2 class="font-poppins text-4xl font-bold text-cyan-800 mb-6">Notas e Historias</h2>
-      <p class="text-gray-600 mb-8">Un espacio para que nuestra comunidad comparta sus experiencias, finales felices y momentos especiales.</p>
-      <div class="text-center bg-gray-200 p-10 rounded-lg">
-        <p class="text-gray-700">La sección de historias de la comunidad está en construcción.</p>
-      </div>
-    </section>
-  </main>
-
-  <!-- Modal de autenticación -->
-  <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
-      <h3 id="modal-title" class="font-poppins text-2xl font-bold text-cyan-800 mb-6"></h3>
-      <form id="auth-form">
-        <div class="mb-4">
-          <label for="email" class="block text-gray-700 mb-2">Correo Electrónico</label>
-          <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
-        </div>
-        <div class="mb-6">
-          <label for="password" class="block text-gray-700 mb-2">Contraseña</label>
-          <input type="password" id="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
-        </div>
-        <p id="auth-error" class="text-red-500 text-sm mb-4 hidden"></p>
-        <div class="flex justify-end space-x-4">
-          <button type="button" id="cancel-auth-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Cancelar</button>
-          <button type="submit" id="submit-auth-btn" class="bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700"></button>
-        </div>
-      </form>
     </div>
-  </div>
 
-  <!-- Script principal -->
-  <script src="script.js" type="module"></script>
+    <script type="module">
+        // --- NAVEGACIÓN Y MANEJO DE SECCIONES ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.page-section');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function showSection(id) {
+            sections.forEach(section => section.style.display = 'none');
+            const activeSection = document.getElementById(id);
+            if (activeSection) activeSection.style.display = 'block';
+            
+            // Si la sección es el mapa, asegúrate de que se renderice correctamente
+            if (id === 'mapeo-mascotas') {
+                setTimeout(() => map.invalidateSize(), 100);
+            }
+            mobileMenu.classList.add('hidden');
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                showSection(targetId);
+            });
+        });
+
+        document.querySelector('a[href="#"]').addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('home-section');
+        });
+        
+        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+        // --- LÓGICA DE SUSCRIPCIÓN (SIMULADA) ---
+        const subscriptionForm = document.getElementById('subscription-form');
+        const subscriptionMessage = document.getElementById('subscription-message');
+        subscriptionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            subscriptionMessage.textContent = '¡Gracias por suscribirte!';
+            subscriptionMessage.className = 'mt-4 text-sm h-5 text-emerald-600';
+            subscriptionForm.reset();
+            setTimeout(() => subscriptionMessage.textContent = '', 3000);
+        });
+
+        // --- LÓGICA DEL MAPA DE MASCOTAS ---
+        const map = L.map('map').setView([-12.046374, -77.042793], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        const reportTypeModal = document.getElementById('report-type-modal');
+        const reportInfoModal = document.getElementById('report-info-modal');
+        const reportInfoTitle = document.getElementById('report-info-title');
+        const reportInfoForm = document.getElementById('report-info-form');
+        const submitReportBtn = document.getElementById('submit-report-btn');
+        const contactFieldContainer = document.getElementById('contact-field-container');
+        
+        let newMarkerCoords = null;
+        let currentReportType = null;
+
+        const icons = {
+            lost: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
+            sighting: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
+            abuse: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] })
+        };
+        
+        const reportDetails = {
+            lost: { title: "Reportar Mascota Perdida", color: "bg-red-500 hover:bg-red-600" },
+            sighting: { title: "Reportar Avistamiento", color: "bg-yellow-500 hover:bg-yellow-600" },
+            abuse: { title: "Reportar Maltrato Animal", color: "bg-purple-600 hover:bg-purple-700" }
+        };
+
+        map.on('click', (e) => {
+            newMarkerCoords = e.latlng;
+            reportTypeModal.classList.remove('hidden');
+            reportTypeModal.classList.add('flex');
+        });
+
+        document.querySelectorAll('.report-option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentReportType = btn.dataset.reportType;
+                reportTypeModal.classList.add('hidden');
+                
+                // Configurar y mostrar el modal de información
+                const details = reportDetails[currentReportType];
+                reportInfoTitle.textContent = details.title;
+                submitReportBtn.className = `text-white px-4 py-2 rounded-md ${details.color}`;
+                contactFieldContainer.classList.toggle('hidden', currentReportType !== 'abuse');
+
+                reportInfoModal.classList.remove('hidden');
+                reportInfoModal.classList.add('flex');
+            });
+        });
+
+        reportInfoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const description = document.getElementById('report-description').value;
+            const contact = document.getElementById('report-contact').value;
+            const file = document.getElementById('report-file').files[0];
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const fileUrl = event.target.result;
+                let popupContent = `
+                    <div class="max-w-xs">
+                        <h4 class="font-bold text-lg mb-2">${reportDetails[currentReportType].title}</h4>
+                        ${file.type.startsWith('image/') ? `<img src="${fileUrl}" class="w-full h-auto rounded-md mb-2">` : `<video controls src="${fileUrl}" class="w-full h-auto rounded-md mb-2"></video>`}
+                        <p class="text-gray-700">${description}</p>
+                        ${currentReportType === 'abuse' && contact ? `<p class="mt-2 text-sm font-semibold">Contacto: ${contact}</p>` : ''}
+                        <button class="found-btn mt-3 text-xs bg-green-500 text-white py-1 px-2 rounded-md hover:bg-green-600">Marcar como Resuelto</button>
+                    </div>
+                `;
+
+                const marker = L.marker(newMarkerCoords, { icon: icons[currentReportType] }).addTo(map)
+                    .bindPopup(popupContent);
+                
+                marker.on('popupopen', () => {
+                    const foundBtn = marker.getPopup().getElement().querySelector('.found-btn');
+                    foundBtn.addEventListener('click', () => {
+                        map.removeLayer(marker);
+                    });
+                });
+
+                closeAllModals();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function closeAllModals() {
+            reportTypeModal.classList.add('hidden');
+            reportInfoModal.classList.add('hidden');
+            reportInfoForm.reset();
+            newMarkerCoords = null;
+            currentReportType = null;
+        }
+
+        document.getElementById('cancel-report-type-btn').addEventListener('click', closeAllModals);
+        document.getElementById('cancel-report-info-btn').addEventListener('click', closeAllModals);
+
+        // --- INICIALIZACIÓN ---
+        showSection('home-section');
+    </script>
 </body>
 </html>
+
+
 
 
 
